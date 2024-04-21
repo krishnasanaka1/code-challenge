@@ -1,1 +1,3 @@
-Your input data here
+CUSTOMER,NEW,2024-01-01,customer1,ch,Dallas,TX
+SITE_VISIT,NEW,2023-01-05,customer1,tag1,tag2
+ORDER,NEW,2021-01-10,customer1,100
