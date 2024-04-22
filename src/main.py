@@ -4,21 +4,24 @@ from datetime import datetime
 class CustomerData:
     def __init__(self):
         self.events = defaultdict(list)
+
+    #Ingests a customer event by storing  event type, customer ID, event time and additional keyword arguments#
+        
     
     def ingest_event(self, event_type, customer_id, event_time, **kwargs):
         self.events[customer_id].append((event_time, event_type, kwargs.get('total_amount', 0)))
 
+    #calculate the LTV for customer ID by sum of the  the total expenditure from 'ORDER' events and dividing it by the visit frequency from 'SITE_VISIT' events#
     def calculate_lifetime_value(self, customer_id):
         events = self.events[customer_id]
         total_expenditure = sum(amount for _, event_type, amount in events if event_type == 'ORDER')
         visit_frequency = sum(1 for _, event_type, _ in events if event_type == 'SITE_VISIT')
         return 52 * (total_expenditure / visit_frequency) if visit_frequency else 0
-
+#return top x customer with high LTV#
     def top_x_simple_ltv_customers(self, x):
         ltv_customers = [(self.calculate_lifetime_value(customer_id), customer_id) for customer_id in self.events]
         return sorted(ltv_customers, reverse=True)[:x]
 
-# Example usage
 if __name__ == "__main__":
     events = [
         ("CUSTOMER", "customer1", datetime(2021, 1, 1), {"last_name": "ch", "adr_city": "Dallas ", "adr_state": "TX"}),
